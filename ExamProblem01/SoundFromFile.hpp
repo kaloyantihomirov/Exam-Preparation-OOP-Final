@@ -26,10 +26,18 @@ class SoundFromFile : public DigitalSound<TSample, TDomain>
 
 public:
 	SoundFromFile(const char* fileName);
+
+	SoundFromFile<TSample, TDomain>* clone() const override;
 };
 
+template<typename TSample, typename TDomain>
+inline SoundFromFile<TSample, TDomain>* SoundFromFile<TSample, TDomain>::clone() const
+{
+	return new SoundFromFile<TSample, TDomain>(*this);
+}
+
 template <typename TSample, typename TDomain>
-SoundFromFile<TSample, TDomain>::SoundFromFile(const char * fileName)
+SoundFromFile<TSample, TDomain>::SoundFromFile(const char* fileName)
 {
 	std::ifstream in(fileName, std::ios::binary);
 

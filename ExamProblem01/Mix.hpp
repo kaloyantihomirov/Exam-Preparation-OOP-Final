@@ -4,11 +4,11 @@
 
 #include "DigitalSound.hpp"
 
-template <typename TSample, typename TDomain> 
+template <typename TSample, typename TDomain>
 class Mix : public DigitalSound<TSample, TDomain>
 {
 	const TSample& getSamplesSumAtIndex(
-		const DigitalSound<TSample, TDomain>* const * sounds,
+		const DigitalSound<TSample, TDomain>* const* sounds,
 		size_t soundsCount,
 		unsigned ind) const;
 
@@ -17,9 +17,17 @@ class Mix : public DigitalSound<TSample, TDomain>
 		size_t soundsCount) const;
 
 public:
-	Mix(const DigitalSound<TSample, TDomain>* const * sounds, 
+	Mix(const DigitalSound<TSample, TDomain>* const* sounds,
 		size_t soundsCount);
+
+	Mix<TSample, TDomain>* clone() const override;
 };
+
+template<typename TSample, typename TDomain>
+inline Mix<TSample, TDomain>* Mix<TSample, TDomain>::clone() const
+{
+	return new Mix<TSample, TDomain>(*this);
+}
 
 template<typename TSample, typename TDomain>
 unsigned Mix<TSample, TDomain>::maxSamplesSize(

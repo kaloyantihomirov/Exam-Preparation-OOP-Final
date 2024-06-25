@@ -7,6 +7,8 @@ class Silence : public DigitalSound<TSample, TDomain>
 {
 public:
 	Silence(size_t _samplesCount);
+
+	Silence<TSample, TDomain>* clone() const override;
 };
 
 template<typename TSample, typename TDomain>
@@ -18,4 +20,10 @@ Silence<TSample, TDomain>::Silence(size_t _samplesCount)
 	{
 		this->samples[i] = 0;
 	}
+}
+
+template<typename TSample, typename TDomain>
+inline Silence<TSample, TDomain>* Silence<TSample, TDomain>::clone() const
+{
+	return new Silence<TSample, TDomain>(*this);
 }

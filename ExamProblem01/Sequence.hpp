@@ -8,8 +8,10 @@ template <typename TSample, typename TDomain>
 class Sequence : public DigitalSound<TSample, TDomain>
 {
 public:
-	Sequence(const DigitalSound<TSample, TDomain>* const * sounds, 
+	Sequence(const DigitalSound<TSample, TDomain>* const* sounds,
 		size_t soundsCount);
+
+	Sequence<TSample, TDomain>* clone() const override;
 };
 
 template <typename TSample, typename TDomain>
@@ -34,4 +36,10 @@ Sequence<TSample, TDomain>::Sequence(const DigitalSound<TSample, TDomain>* const
 			this->setSampleAtIndex(sounds[i]->getSamples()[j], this->samplesCount++);
 		}
 	}
+}
+
+template<typename TSample, typename TDomain>
+inline Sequence<TSample, TDomain>* Sequence<TSample, TDomain>::clone() const
+{
+	return new Sequence<TSample, TDomain>(*this);
 }

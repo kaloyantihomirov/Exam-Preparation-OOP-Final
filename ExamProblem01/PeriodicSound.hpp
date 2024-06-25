@@ -9,11 +9,19 @@ class PeriodicSound : public DigitalSound<TSample, TDomain>
 {
 public:
 	PeriodicSound(TSample* arr, size_t arrSize, size_t repeatTimes);
+
+	PeriodicSound<TSample, TDomain>* clone() const override;
 };
+
+template<typename TSample, typename TDomain>
+inline PeriodicSound<TSample, TDomain>* PeriodicSound<TSample, TDomain>::clone() const
+{
+	return new PeriodicSound<TSample, TDomain>(*this);
+}
 
 template <typename TSample, typename TDomain>
 PeriodicSound<TSample, TDomain>::PeriodicSound(TSample* arr,
-	size_t arrSize, 
+	size_t arrSize,
 	size_t repeatTimes)
 {
 	//10 15 13 5

@@ -13,21 +13,44 @@ protected:
 	TDomain M;
 
 	void setSampleAtIndex(const TSample& sample, unsigned ind);
+	void copyFrom(const DigitalSound<TSample, TDomain>& other);
 
 public:
 	DigitalSound(const TDomain& _M = 1);
+	DigitalSound(const DigitalSound<TSample, TDomain>& other);
 
 	size_t getSamplesCount() const;
 	const TSample* getSamples() const;
 
 	void printForDebug() const;
 
-	virtual void save(const char * fileName);
+	virtual DigitalSound* clone() const = 0;
+
+	virtual void save(const char* fileName);
 
 	virtual const TSample& operator[](unsigned ind) const;
 
 	virtual ~DigitalSound();
 };
+
+template <typename TSample, typename TDomain>
+void DigitalSound<TSample, TDomain>::copyFrom(const DigitalSound<TSample, TDomain>& other)
+{
+	samples = new TSample[other.samplesCount];
+	samplesCount = other.samplesCount;
+	M = other.M;
+
+	for (int i = 0; i < samplesCount; i++)
+	{
+		samples[i] = other.samples[i];
+	}
+}
+
+template<typename TSample, typename TDomain>
+inline DigitalSound<TSample, TDomain>::DigitalSound(const DigitalSound<TSample, TDomain>& other)
+{
+	copyFrom(other);
+}
 
 template<typename TSample, typename TDomain>
 void DigitalSound<TSample, TDomain>::printForDebug() const

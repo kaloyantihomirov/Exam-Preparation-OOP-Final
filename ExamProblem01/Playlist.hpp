@@ -6,6 +6,9 @@
 #include "DigitalSound.hpp"
 #include "SoundFromFile.hpp"
 #include "Effect.hpp"
+#include "TransformByCoefficient.hpp"
+#include "SoundsContainer.hpp"
+#include "Silence.hpp"
 
 static unsigned countChars(char charToLook, std::istream& in)
 {
@@ -30,7 +33,7 @@ static unsigned countChars(char charToLook, std::istream& in)
 
 class Playlist
 {
-	DigitalSound<float, int>** sounds;
+	SoundsContainer<float, int> sc;
 
 public:
 	Playlist(const char* fileName);
@@ -40,7 +43,7 @@ public:
 	DigitalSound<float, int>& operator[](unsigned inx);
 };
 
-inline Playlist::Playlist(const char* fileName) 
+inline Playlist::Playlist(const char* fileName)
 {
 	std::ifstream in(fileName);
 
@@ -57,7 +60,12 @@ inline Playlist::Playlist(const char* fileName)
 
 		if (intervalsCount == 0)
 		{
+			size_t samplesCount;
+			in >> samplesCount;
 
+			Silence<float, int> silence(samplesCount);
+
+			sc.addSound(&silence);
 		}
 		else if (intervalsCount == 1)
 		{
@@ -69,14 +77,17 @@ inline Playlist::Playlist(const char* fileName)
 
 			SoundFromFile<float, int> sff(fileName);
 
-			Effect<float, int> eff(&sff,
-				[coeff](const float& sample, unsigned inx) -> float
-			{
-				return sample * coeff;
-			});
+			TransformByCoefficient<float> tbc(coeff);
+
+			Effect<float, int> eff(&sff,tbc);
+
+			sc.addSound(&eff);
+
+			//add effect to sounds
 		}
 		else if (intervalsCount == 2)
 		{
+
 		}
 	}
 }
