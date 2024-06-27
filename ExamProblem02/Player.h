@@ -1,5 +1,8 @@
 #pragma once
+
 #include <stdexcept>
+#include <cstring>
+#include <iostream>
 
 class Player
 {
@@ -8,7 +11,8 @@ class Player
     int blood, power, index;
 
 public:
-	Player(const char* _name, int _initialBlood, int _maxBlood, int _power, int _index);
+	Player(const char* _name, int _initialBlood,
+           int _maxBlood, int _power, int _index);
 	//power [20; 100] -> setPower
 
 	Player(const Player& other) = delete;
@@ -21,13 +25,16 @@ public:
 	void setBlood(int newBloodVal);
 
 	int getMaxBlood() const;
-	
-	void increaseBlood(int& by);
 
 	int getPower() const;
 	void setPower(int newPower);
 
 	void setIndex(int newIndex);
+    int getIndex() const;
+
+    bool isAlive() const;
+
+    void printPlayer() const; //for debug purposes
 
 	~Player();
 };
@@ -73,18 +80,6 @@ int Player::getMaxBlood() const
 	return maxBlood;
 }
 
-void Player::increaseBlood(int& by)
-{
-	int currentBlood = blood;
-	blood += by;
-
-	if (blood > maxBlood)
-	{
-		blood = maxBlood;
-		by -= maxBlood - currentBlood;
-	}
-}
-
 int Player::getPower() const
 {
 	return power;
@@ -94,7 +89,7 @@ void Player::setPower(int newPower)
 {
 	if (newPower < 20 || newPower > 100)
 	{
-		delete[] name; //thats why we use smart pointers!
+		delete[] name; //that's why we use smart pointers!
 		throw std::invalid_argument("inv power");
 	}
 
@@ -109,11 +104,32 @@ Player::Player(const char* _name, int _initialBlood, int _maxBlood, int _power, 
 
 void Player::setIndex(int _newIndex)
 {
+    if (_newIndex < 0)
+    {
+        index = 0;
+        return;
+    }
+
 	index = _newIndex;
+}
+
+int Player::getIndex() const
+{
+    return index;
 }
 
 Player::~Player()
 {
 	delete[] name;
 	name = nullptr;
+}
+
+bool Player::isAlive() const
+{
+    return blood > 0;
+}
+
+void Player::printPlayer() const
+{
+    std::cout << "p(p:" << power << ",b:" << blood << ",i:" << index << ")\n";
 }

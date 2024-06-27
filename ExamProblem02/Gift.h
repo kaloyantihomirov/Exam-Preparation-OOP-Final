@@ -2,7 +2,7 @@
 
 #include "Object.h"
 
-class Gift : public Object
+class Gift : virtual public Object
 {
 protected:
 	int value;

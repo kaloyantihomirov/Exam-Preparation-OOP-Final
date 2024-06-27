@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstring>
+#include <iostream>
 #include "Artifact.h"
 
 class Monster : public Artifact
@@ -7,14 +9,19 @@ class Monster : public Artifact
 	char* name;
 	int blood, power;
 
+    void copyFrom(const Monster& other);
+
 public:
 	Monster(const char* _name, int _blood, int _power);
+    Monster(const Monster& other);
+
+    Monster& operator=(const Monster& other) = delete;
 
 	const char* getName() const;
 	void setName(const char* _name);
 
+    int getBlood() const;
 	void setBlood(int newBlood);
-	int getBlood() const;
 
 	int getPower() const;
 	void setPower(int newPower);
@@ -22,17 +29,17 @@ public:
 	void draw() const override;
 	void interactWithPlayer(Player& player) override; 
 
+    Monster* clone() const override;
+
+    bool isAlive() const override;
+
 	~Monster();
 };
 
 void Monster::interactWithPlayer(Player& player)
 {
-	//При взаимодействие с чудовище кръвта на играча се намалява със силата на чудовището, както и кръвта на чудовището също се намалява със силата на играча. Ако кръвта на чудовището се изчерпи, то се премахва от играта. Ако кръвта на играча се изчерпи – той губи играта.
-
 	player.setBlood(player.getBlood() - power);
-	blood -= player.getPower();
-
-
+    setBlood(blood - player.getPower());
 }
 
 void Monster::setBlood(int newBlood)
@@ -72,6 +79,12 @@ int Monster::getPower() const
 
 void Monster::setPower(int newPower)
 {
+    if (newPower < 0)
+    {
+        power = 0;
+        return;
+    }
+
 	power = newPower;
 }
 
@@ -86,4 +99,33 @@ Monster::~Monster()
 {
 	delete[] name;
 	name = nullptr;
+}
+
+void Monster::draw() const
+{
+    std::cout << "m(p:" << power << ",b:" << blood << ")";
+}
+
+Monster *Monster::clone() const
+{
+    return new Monster(*this);
+}
+
+void Monster::copyFrom(const Monster& other)
+{
+    name = new char[strlen(other.name)];
+    strcpy(name, other.name);
+
+    blood = other.blood;
+    power = other.power;
+}
+
+Monster::Monster(const Monster &other)
+{
+    copyFrom(other);
+}
+
+bool Monster::isAlive() const
+{
+    return blood > 0;
 }

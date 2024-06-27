@@ -4,16 +4,20 @@
 
 class Artifact
 {
-protected:
-	int index;
 public:
-	Artifact(int _index);
 	virtual void draw() const = 0;
 
 	virtual void interactWithPlayer(Player& p) = 0;
+
+    virtual Artifact* clone() const = 0;
+
+    virtual bool isAlive() const;
+
+    //virtual ~Artifact();
 };
 
-Artifact::Artifact(int _index) : index(_index)
+bool Artifact::isAlive() const
 {
-
+    return true;
 }
+

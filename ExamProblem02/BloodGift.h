@@ -10,16 +10,33 @@ public:
 
 	void interactWithPlayer(Player& p) override;
 	void draw() const;
+    BloodGift* clone() const override;
+    bool isAlive() const override;
 };
 
 void BloodGift::draw() const
 {
-	std::cout << "I am a blood gift with value " << value << ".\n";
+    std::cout << "bg(" << value << ")";
 }
 
 BloodGift::BloodGift(int _value) : Gift(_value) {}
 
 void BloodGift::interactWithPlayer(Player& p)
 {
-	p.increaseBlood(value);
+    int playerBlood = p.getBlood();
+
+    p.setBlood(p.getBlood() + value);
+    value -= p.getBlood() - playerBlood;
+
+	//p.increaseBlood(value);
+}
+
+BloodGift *BloodGift::clone() const
+{
+    return new BloodGift(*this);
+}
+
+bool BloodGift::isAlive() const
+{
+    return value > 0;
 }
