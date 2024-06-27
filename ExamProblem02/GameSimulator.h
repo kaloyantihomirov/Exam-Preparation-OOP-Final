@@ -6,6 +6,8 @@
 #include "Artifact.h"
 #include "Teleport.h"
 #include "Monster.h"
+#include "BloodGift.h"
+#include "CombinedObject.h"
 
 class GameSimulator
 {
@@ -14,8 +16,8 @@ class GameSimulator
 public:
     Artifact* field[10] = { nullptr, };
 
-    GameSimulator(const char* _name = "OOP Master", int _initialBlood = 150,
-                  int _maxBlood = 150, int _power = 42, int _index = 0);
+    GameSimulator(const char* _name = "OOP Master", int _initialBlood = 80,
+                  int _maxBlood = 100, int _power = 42, int _index = 0);
 
     bool playGame();
 
@@ -34,7 +36,9 @@ GameSimulator::GameSimulator(const char* _name, int _initialBlood,
     Teleport t2(1231, 5);
     Monster m1("nusha", 50, 80);
     Monster m2("tisho", 10, 40);
-    field[2] = t1.clone();
+    BloodGift bg(20);
+    CombinedObject cf(20, 2121, 2);
+    field[2] = cf.clone();
     field[5] = t2.clone();
     field[1] = m1.clone();
     field[8] = m2.clone();
@@ -63,7 +67,28 @@ bool GameSimulator::playGame()
 
         p.setIndex(p.getIndex() + play);
 
-        while (field[p.getIndex()] != nullptr) //we should interact, as it's not an empty cell
+        /*if (field[p.getIndex()]) //landed to tel, mon, gift
+        {
+            int playerIndexBeforeInteraction = p.getIndex();
+            field[p.getIndex()]->interactWithPlayer(p);
+
+            if (playerIndexBeforeInteraction == p.getIndex())
+            {
+                //not a teleport, so a monster, gift or empty
+                if (!field[p.getIndex()]->isAlive())
+                {
+                    delete field[p.getIndex()];
+                    field[p.getIndex()] = nullptr;
+                }
+            }
+            else
+            {
+                //landed on a teleport
+            }
+        }
+*/
+        while (field[p.getIndex()] != nullptr)
+            //we should interact, as it's not an empty cell
         {
             int playerIndexBeforeInteraction = p.getIndex();
             field[p.getIndex()]->interactWithPlayer(p);

@@ -3,7 +3,7 @@
 #include "BloodGift.h"
 #include "Teleport.h"
 
-class CombinedObject : public Gift, public Teleport
+class CombinedObject : public BloodGift, public Teleport
 {
 public:
 	CombinedObject(int _value, int _uniqueNumber, int _index);
@@ -14,27 +14,30 @@ public:
 
     CombinedObject* clone() const override;
 
+    bool isAlive() const override;
 };
 
 void CombinedObject::draw() const
 {
-	std::cout << "I am a combined object:\n";
-	Gift::draw();
-	Teleport::draw();
+    std::cout << "co[v:" << value << ",i:" << getIndex() << "]";
 }
 
 void CombinedObject::interactWithPlayer(Player& p)
 {
-	Gift::interactWithPlayer(p);
+    BloodGift::interactWithPlayer(p);
 	Teleport::interactWithPlayer(p);
 }
 
-CombinedObject::CombinedObject(int _value, int _uniqueNumber, int _index) : Gift(_value), Teleport(_uniqueNumber, _index)
+CombinedObject::CombinedObject(int _value, int _uniqueNumber, int _index) : BloodGift(_value), Teleport(_uniqueNumber, _index)
 {
-
 }
 
 CombinedObject *CombinedObject::clone() const
 {
     return new CombinedObject(*this);
+}
+
+bool CombinedObject::isAlive() const
+{
+    return Teleport::isAlive();
 }

@@ -12,6 +12,8 @@ class Teleport : virtual public Object
 public:
 	Teleport(int _uniqueNum, int _index);
 
+    int getIndex() const;
+
     Teleport* clone() const override;
 	void interactWithPlayer(Player& p) override;
 	void draw() const override;
@@ -48,4 +50,9 @@ Teleport *Teleport::clone() const
 bool Teleport::isAlive() const
 {
     return true;
+}
+
+int Teleport::getIndex() const
+{
+    return index;
 }

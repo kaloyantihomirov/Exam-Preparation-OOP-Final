@@ -13,7 +13,7 @@ public:
 
     virtual bool isAlive() const;
 
-    //virtual ~Artifact();
+    virtual ~Artifact() = default;
 };
 
 bool Artifact::isAlive() const
